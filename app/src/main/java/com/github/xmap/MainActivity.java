@@ -6,9 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -24,11 +27,15 @@ import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.github.xmap.base.CheckPermissionsActivity;
+import com.github.xmap.poi.POIView;
 import com.github.xmap.poi.PoiPresenter;
 import com.github.xmap.poi.PoiPresenterImp;
 
-public class MainActivity extends CheckPermissionsActivity implements LocationSource, AMapLocationListener ,AMap.OnPOIClickListener {
+public class MainActivity extends CheckPermissionsActivity implements LocationSource, AMapLocationListener ,AMap.OnPOIClickListener ,POIView ,PoiSearch.OnPoiSearchListener{
     private MapView mapView;
     private AMap aMap;
     private LinearLayout.LayoutParams mParams;
@@ -76,12 +83,24 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
 
         aMap.setOnPOIClickListener(this);
 
-        poiPresenter = new PoiPresenterImp();
+        poiPresenter = new PoiPresenterImp(this);
 
-        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243 ,107.58567626007701) , 18));
-//        latitude = 26.167029352515243
-//        longitude = 107.58567626007701
+        // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        query = new PoiSearch.Query( "都匀东站" ,"火车站" ,"0854");
+        poiSearch = new PoiSearch(this, query);
+        poiSearch.setOnPoiSearchListener(this);
+
+
+        handler.sendEmptyMessageDelayed(1,2000);
+
     }
+   private Handler handler = new Handler(){
+       @Override
+       public void handleMessage(Message msg) {
+           super.handleMessage(msg);
+           aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f));
+       }
+   };
     private void checkWifiSetting() {
         if (mWifiManager.isWifiEnabled()) {
             return;
@@ -182,9 +201,31 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
         mListener = null;
         mlocationClient = null;
     }
-
+    private PoiSearch.Query query;// Poi查询条件类
+    private PoiSearch poiSearch;// POI搜索
     @Override
     public void onPOIClick(Poi poi) {
-        poiPresenter.showPOIInfo(poi);
+        poiPresenter.onPOIClick(poi);
+        aMap.moveCamera(CameraUpdateFactory.newLatLng(poi.getCoordinate() ));
+
+
+    }
+
+    @Override
+    public void showPOIInfo(Poi poi) {
+        Toast.makeText(this , poi.getPoiId()+poi.getName() ,Toast.LENGTH_LONG).show();
+        poiSearch.searchPOIIdAsyn(poi.getPoiId());
+
+
+    }
+
+    @Override
+    public void onPoiSearched(PoiResult poiResult, int retCode) {
+
+    }
+
+    @Override
+    public void onPoiItemSearched(PoiItem poiItem, int retCode) {
+        Toast.makeText(this , poiItem.getTitle() ,Toast.LENGTH_LONG).show();
     }
 }
