@@ -16,14 +16,19 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Poi;
 import com.github.xmap.base.CheckPermissionsActivity;
+import com.github.xmap.poi.PoiPresenter;
+import com.github.xmap.poi.PoiPresenterImp;
 
-public class MainActivity extends CheckPermissionsActivity implements LocationSource, AMapLocationListener {
+public class MainActivity extends CheckPermissionsActivity implements LocationSource, AMapLocationListener ,AMap.OnPOIClickListener {
     private MapView mapView;
     private AMap aMap;
     private LinearLayout.LayoutParams mParams;
@@ -39,6 +44,15 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
     public  static  final int BEIJING=1;
     public  static  final int GUANGZHOU=2;
 
+    PoiPresenter poiPresenter;
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +73,14 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
         uiSettings.setTiltGesturesEnabled(false);//禁止倾斜手势.
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         mWifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        aMap.setOnPOIClickListener(this);
+
+        poiPresenter = new PoiPresenterImp();
+
+        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243 ,107.58567626007701) , 18));
+//        latitude = 26.167029352515243
+//        longitude = 107.58567626007701
     }
     private void checkWifiSetting() {
         if (mWifiManager.isWifiEnabled()) {
@@ -103,15 +125,6 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
         super.onPause();
         mapView.onPause();
         deactivate();
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
     }
 
     /**
@@ -170,4 +183,8 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
         mlocationClient = null;
     }
 
+    @Override
+    public void onPOIClick(Poi poi) {
+        poiPresenter.showPOIInfo(poi);
+    }
 }
