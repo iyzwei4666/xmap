@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,8 +23,13 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Poi;
+import com.amap.api.maps.model.animation.Animation;
+import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
@@ -211,6 +217,7 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
     @Override
     public void showPOIInfo(Poi poi) {
         poiSearch.searchPOIIdAsyn(poi.getPoiId());
+        addMarker(poi.getCoordinate());
     }
 
     @Override
@@ -221,5 +228,22 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
     @Override
     public void onPoiItemSearched(PoiItem poiItem, int retCode) {
         Toast.makeText(this , poiItem.getTitle() ,Toast.LENGTH_LONG).show();
+
+    }
+    Marker marker;
+    /**
+     * 添加带生长效果marker
+     */
+    private void addMarker(LatLng latLng) {
+        if (marker!=null)
+        marker.remove();
+        MarkerOptions options = new MarkerOptions();
+        options.position(latLng);
+        options.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(this.getResources(),R.mipmap.icon_openmap_mark)));
+        marker = aMap.addMarker(options);
+        Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
+        markerAnimation.setDuration(1000);  //设置动画时间 单位毫秒
+        marker.setAnimation(markerAnimation);
+        marker.startAnimation();
     }
 }
