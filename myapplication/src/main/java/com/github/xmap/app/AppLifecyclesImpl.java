@@ -11,7 +11,7 @@ import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.ButterKnife;
 
-import com.github.xxmap.BuildConfig;
+import com.github.xmap.BuildConfig;
 
 import timber.log.Timber;
 

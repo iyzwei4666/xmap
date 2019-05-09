@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.github.xxmap.BuildConfig;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.di.module.GlobalConfigModule;
 import com.jess.arms.http.log.RequestInterceptor;
@@ -17,6 +16,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.github.xmap.BuildConfig;
 import com.github.xmap.mvp.model.api.Api;
 
 /**

@@ -18,13 +18,10 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapOptions;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 import com.amap.api.services.core.PoiItem;
@@ -34,7 +31,6 @@ import com.github.xmap.base.CheckPermissionsActivity;
 import com.github.xmap.poi.POIView;
 import com.github.xmap.poi.PoiPresenter;
 import com.github.xmap.poi.PoiPresenterImp;
-import com.github.xxmap.R;
 
 public class MainActivity extends CheckPermissionsActivity implements LocationSource, AMapLocationListener ,AMap.OnPOIClickListener ,POIView ,PoiSearch.OnPoiSearchListener{
     private MapView mapView;
@@ -65,7 +61,7 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mContainerLayout = (RelativeLayout) findViewById(R.id.root_view);
+        mContainerLayout = (RelativeLayout) findViewById(R.id.root);
 
         mapView = new MapView(this);
         mapView.onCreate(savedInstanceState);
@@ -214,10 +210,7 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
 
     @Override
     public void showPOIInfo(Poi poi) {
-        Toast.makeText(this , poi.getPoiId()+poi.getName() ,Toast.LENGTH_LONG).show();
         poiSearch.searchPOIIdAsyn(poi.getPoiId());
-
-
     }
 
     @Override

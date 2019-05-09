@@ -4,7 +4,6 @@
 package com.github.xmap.base;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,8 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
-
-import com.github.xxmap.R;
+import com.github.xmap.R;
 
 import java.util.ArrayList;
 import java.util.List;

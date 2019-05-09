@@ -8,8 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-
-import com.github.xxmap.R;
+import com.github.xmap.R;
 
 import timber.log.Timber;
 

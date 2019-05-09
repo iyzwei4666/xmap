@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.github.xxmap"
+        applicationId "com.github.xmap"
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
         versionCode rootProject.ext.android["versionCode"]
@@ -46,15 +46,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation 'me.jessyan:arms:2.4.1'
+    
     implementation project(':sdk')
     //view
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"]) {
         exclude module: 'support-annotations'
     }
-
-    implementation 'com.jakewharton.timber:timber:4.7.1'
     //tools
     annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
     //test
