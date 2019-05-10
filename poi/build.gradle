@@ -24,13 +24,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':sdk')
 
-    api 'me.jessyan:arms:2.4.1'
+    annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
 
-    api 'com.amap.api:3dmap:latest.integration' //6.5.0
-    api 'com.amap.api:location:latest.integration'
-    api 'com.amap.api:search:latest.integration'
-    
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

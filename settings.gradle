@@ -1,2 +1,2 @@
-include ':sdk'
+include ':sdk', ':poi'
 include ':myapplication'
