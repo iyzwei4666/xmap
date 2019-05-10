@@ -20,11 +20,13 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -32,6 +34,9 @@ import com.amap.api.maps.model.Poi;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
+import com.github.xmap.poi.mvp.model.entity.Event;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -42,6 +47,8 @@ import com.github.xmap.poi.mvp.presenter.PoiPresenter;
 
 import com.github.xmap.poi.R;
 
+
+import org.simple.eventbus.EventBus;
 
 import timber.log.Timber;
 
@@ -60,7 +67,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
-public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContract.View ,LocationSource, AMapLocationListener,AMap.OnPOIClickListener {
+public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContract.View ,LocationSource, AMapLocationListener,AMap.OnPOIClickListener,PoiSearch.OnPoiSearchListener {
     private MapView mapView;
     private AMap aMap;
     private LinearLayout.LayoutParams mParams;
@@ -71,13 +78,6 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f));
-        }
-    };
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -104,8 +104,9 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         mContainerLayout = (RelativeLayout) findViewById(R.id.root);
-
-        mapView = new MapView(this);
+        AMapOptions aOptions = new AMapOptions();
+        aOptions.camera(new CameraPosition(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f, 0, 0));
+        mapView = new MapView(this, aOptions);
         mapView.onCreate(savedInstanceState);
         mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -114,19 +115,23 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setCompassEnabled(true);
         uiSettings.setMyLocationButtonEnabled(true);
-        aMap.setMyLocationEnabled(true);
+//        aMap.setMyLocationEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);//禁止地图旋转手势.
         uiSettings.setTiltGesturesEnabled(false);//禁止倾斜手势.
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         mWifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         aMap.setOnPOIClickListener(this);
-
+        aMap.setOnMapClickListener(new AMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                EventBus.getDefault().post(new Event.MapClick(latLng));
+            }
+        });
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
 
+        mPresenter.init(this);
 
-
-        handler.sendEmptyMessageDelayed(1,2000);
     }
 
     @Override
@@ -284,8 +289,29 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     }
 
     @Override
-    public void showPoiInfo(PoiItem poiItem) {
-        Toast.makeText(this , poiItem.getTitle() ,Toast.LENGTH_LONG).show();
+    public void delPoiMarker() {
+        if (marker!=null)
+            marker.remove();
+            marker = null;
     }
 
+    @Override
+    public void showPoiInfo(PoiItem poiItem) {
+
+    }
+
+    @Override
+    public void onPoiSearched(PoiResult poiResult, int i) {
+
+    }
+
+    @Override
+    public void onPoiItemSearched(PoiItem poiItem, int i) {
+        mPresenter.handlePoiItem(poiItem);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

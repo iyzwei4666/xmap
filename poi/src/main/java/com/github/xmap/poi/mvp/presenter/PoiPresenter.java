@@ -6,6 +6,8 @@ import com.amap.api.maps.model.Poi;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.github.xmap.poi.mvp.model.entity.Event;
+import com.github.xmap.poi.mvp.ui.activity.PoiActivity;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.mvp.BasePresenter;
@@ -17,6 +19,8 @@ import timber.log.Timber;
 import javax.inject.Inject;
 
 import com.github.xmap.poi.mvp.contract.PoiContract;
+
+import org.simple.eventbus.Subscriber;
 
 
 /**
@@ -45,22 +49,9 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     @Inject
     public PoiPresenter(PoiContract.Model model, PoiContract.View rootView) {
         super(model, rootView);
-        Timber.i("handlePoi");
-        query = new PoiSearch.Query( "都匀东站" ,"火车站" ,"0854");
-        poiSearch = new PoiSearch(mApplication, query);
-        Timber.i("PoiPresenter2");
-        poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
-            @Override
-            public void onPoiSearched(PoiResult poiResult, int retCode) {
 
-            }
 
-            @Override
-            public void onPoiItemSearched(PoiItem poiItem, int retCode) {
-                mRootView.showPoiInfo(poiItem);
-            }
-        });
-        Timber.i("PoiPresenter2");
+
     }
 
     @Override
@@ -75,11 +66,30 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     private PoiSearch.Query query;// Poi查询条件类
     private PoiSearch poiSearch;// POI搜索
     public void handlePoi(Poi poi) {
-        Timber.i("handlePoi");
+        Timber.i("onPOIClick");
+        Timber.i("searchPOIIdAsyn");
         poiSearch.searchPOIIdAsyn(poi.getPoiId());
+        Timber.i("addPoiMarker");
         mRootView.addPoiMarker(poi.getCoordinate());
 
 
 
+    }
+
+
+    public void handlePoiItem(PoiItem poiItem) {
+        Timber.i("searchPOIIdAsynSucc");
+        mRootView.showPoiInfo(poiItem);
+    }
+
+    public void init(PoiSearch.OnPoiSearchListener listener) {
+        query = new PoiSearch.Query( "都匀东站" ,"火车站" ,"0854");
+        poiSearch = new PoiSearch(mApplication , query);
+        poiSearch.setOnPoiSearchListener(listener);
+    }
+
+    @Subscriber
+    public void onMapClickEvent(Event.MapClick event) {
+        mRootView.delPoiMarker();
     }
 }
