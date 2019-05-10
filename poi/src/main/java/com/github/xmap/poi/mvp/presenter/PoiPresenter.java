@@ -6,6 +6,8 @@ import com.amap.api.maps.model.Poi;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.common.entity.PublicEvent;
+import com.common.inter.ICommon;
 import com.github.xmap.poi.mvp.model.entity.Event;
 import com.github.xmap.poi.mvp.ui.activity.PoiActivity;
 import com.jess.arms.integration.AppManager;
@@ -36,7 +38,7 @@ import org.simple.eventbus.Subscriber;
  * ================================================
  */
 @ActivityScope
-public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.View> {
+public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.View> implements ICommon {
     @Inject
     RxErrorHandler mErrorHandler;
     @Inject
@@ -50,7 +52,7 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     public PoiPresenter(PoiContract.Model model, PoiContract.View rootView) {
         super(model, rootView);
 
-
+        Timber.i("PoiPresenter---onCreate");
 
     }
 
@@ -61,6 +63,11 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
+
+        this.query = null;
+        this.poiSearch = null;
+
+        Timber.i("PoiPresenter---onDestroy");
     }
 
     private PoiSearch.Query query;// Poi查询条件类
@@ -91,5 +98,10 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     @Subscriber
     public void onMapClickEvent(Event.MapClick event) {
         mRootView.delPoiMarker();
+    }
+
+    @Subscriber
+    public void onBackPressed(PublicEvent.onBackPressed event) {
+        mRootView.delPoiMarker();;
     }
 }

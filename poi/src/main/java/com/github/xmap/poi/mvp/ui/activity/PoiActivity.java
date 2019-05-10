@@ -36,6 +36,7 @@ import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.common.entity.PublicEvent;
 import com.github.xmap.poi.mvp.model.entity.Event;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -113,8 +114,10 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         mContainerLayout.addView(mapView, mParams);
         aMap = mapView.getMap();
         UiSettings uiSettings = aMap.getUiSettings();
-        uiSettings.setCompassEnabled(true);
-        uiSettings.setMyLocationButtonEnabled(true);
+        uiSettings.setMyLocationButtonEnabled(false);
+        uiSettings.setScaleControlsEnabled(true);
+
+
 //        aMap.setMyLocationEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);//禁止地图旋转手势.
         uiSettings.setTiltGesturesEnabled(false);//禁止倾斜手势.
@@ -266,7 +269,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     @Override
     public void onPOIClick(Poi poi) {
         mPresenter.handlePoi(poi);
-        aMap.moveCamera(CameraUpdateFactory.newLatLng(poi.getCoordinate() ));
+        aMap.animateCamera(CameraUpdateFactory.newLatLng(poi.getCoordinate() ));
 
     }
 
@@ -312,6 +315,6 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
     @Override
     public void onBackPressed() {
-
+        EventBus.getDefault().post(new PublicEvent.onBackPressed());
     }
 }
