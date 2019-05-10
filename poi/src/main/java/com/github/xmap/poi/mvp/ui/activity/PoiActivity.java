@@ -32,8 +32,6 @@ import com.amap.api.maps.model.Poi;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.services.core.PoiItem;
-import com.amap.api.services.poisearch.PoiResult;
-import com.amap.api.services.poisearch.PoiSearch;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -63,6 +61,23 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * ================================================
  */
 public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContract.View ,LocationSource, AMapLocationListener,AMap.OnPOIClickListener {
+    private MapView mapView;
+    private AMap aMap;
+    private LinearLayout.LayoutParams mParams;
+    private RelativeLayout mContainerLayout;
+
+    private WifiManager mWifiManager;
+    private LocationSource.OnLocationChangedListener mListener;
+    private AMapLocationClient mlocationClient;
+    private AMapLocationClientOption mLocationOption;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f));
+        }
+    };
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -142,26 +157,6 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     }
 
 
-    private MapView mapView;
-    private AMap aMap;
-    private LinearLayout.LayoutParams mParams;
-    private RelativeLayout mContainerLayout;
-
-    private WifiManager mWifiManager;
-    private LocationSource.OnLocationChangedListener mListener;
-    private AMapLocationClient mlocationClient;
-    private AMapLocationClientOption mLocationOption;
-
-
-
-
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f));
-        }
-    };
     private void checkWifiSetting() {
         if (mWifiManager.isWifiEnabled()) {
             return;
@@ -267,16 +262,15 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     public void onPOIClick(Poi poi) {
         mPresenter.handlePoi(poi);
         aMap.moveCamera(CameraUpdateFactory.newLatLng(poi.getCoordinate() ));
-        addMarker(poi.getCoordinate());
 
     }
 
-
-    Marker marker;
+    private Marker marker;
     /**
      * 添加带生长效果marker
      */
-    private void addMarker(LatLng latLng) {
+    @Override
+    public void addPoiMarker(LatLng latLng) {
         if (marker!=null)
             marker.remove();
         MarkerOptions options = new MarkerOptions();
@@ -293,4 +287,5 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     public void showPoiInfo(PoiItem poiItem) {
         Toast.makeText(this , poiItem.getTitle() ,Toast.LENGTH_LONG).show();
     }
+
 }

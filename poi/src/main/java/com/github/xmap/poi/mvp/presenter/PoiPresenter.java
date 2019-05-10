@@ -12,6 +12,7 @@ import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.http.imageloader.ImageLoader;
 
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
+import timber.log.Timber;
 
 import javax.inject.Inject;
 
@@ -44,23 +45,24 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     @Inject
     public PoiPresenter(PoiContract.Model model, PoiContract.View rootView) {
         super(model, rootView);
-
+        Timber.i("handlePoi");
         query = new PoiSearch.Query( "都匀东站" ,"火车站" ,"0854");
         poiSearch = new PoiSearch(mApplication, query);
-        poiSearch.setOnPoiSearchListener(poiSearchListener);
+        Timber.i("PoiPresenter2");
+        poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
+            @Override
+            public void onPoiSearched(PoiResult poiResult, int retCode) {
 
+            }
+
+            @Override
+            public void onPoiItemSearched(PoiItem poiItem, int retCode) {
+                mRootView.showPoiInfo(poiItem);
+            }
+        });
+        Timber.i("PoiPresenter2");
     }
-    PoiSearch.OnPoiSearchListener  poiSearchListener = new PoiSearch.OnPoiSearchListener() {
-        @Override
-        public void onPoiSearched(PoiResult poiResult, int retCode) {
 
-        }
-
-        @Override
-        public void onPoiItemSearched(PoiItem poiItem, int retCode) {
-            mRootView.showPoiInfo(poiItem);
-        }
-    };
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -73,6 +75,11 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     private PoiSearch.Query query;// Poi查询条件类
     private PoiSearch poiSearch;// POI搜索
     public void handlePoi(Poi poi) {
+        Timber.i("handlePoi");
         poiSearch.searchPOIIdAsyn(poi.getPoiId());
+        mRootView.addPoiMarker(poi.getCoordinate());
+
+
+
     }
 }
