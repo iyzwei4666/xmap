@@ -38,6 +38,8 @@ import com.github.xmap.poi.POIView;
 import com.github.xmap.poi.PoiPresenter;
 import com.github.xmap.poi.PoiPresenterImp;
 
+import timber.log.Timber;
+
 public class MainActivity extends CheckPermissionsActivity implements LocationSource, AMapLocationListener ,AMap.OnPOIClickListener ,POIView ,PoiSearch.OnPoiSearchListener{
     private MapView mapView;
     private AMap aMap;
@@ -166,7 +168,7 @@ public class MainActivity extends CheckPermissionsActivity implements LocationSo
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
-                Log.e("AmapErr", errText);
+                Timber.e(errText);
 
             }
         }

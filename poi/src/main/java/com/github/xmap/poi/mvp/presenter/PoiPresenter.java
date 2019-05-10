@@ -2,6 +2,10 @@ package com.github.xmap.poi.mvp.presenter;
 
 import android.app.Application;
 
+import com.amap.api.maps.model.Poi;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.mvp.BasePresenter;
@@ -40,8 +44,23 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     @Inject
     public PoiPresenter(PoiContract.Model model, PoiContract.View rootView) {
         super(model, rootView);
-    }
 
+        query = new PoiSearch.Query( "都匀东站" ,"火车站" ,"0854");
+        poiSearch = new PoiSearch(mApplication, query);
+        poiSearch.setOnPoiSearchListener(poiSearchListener);
+
+    }
+    PoiSearch.OnPoiSearchListener  poiSearchListener = new PoiSearch.OnPoiSearchListener() {
+        @Override
+        public void onPoiSearched(PoiResult poiResult, int retCode) {
+
+        }
+
+        @Override
+        public void onPoiItemSearched(PoiItem poiItem, int retCode) {
+            mRootView.showPoiInfo(poiItem);
+        }
+    };
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -49,5 +68,11 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
+    }
+
+    private PoiSearch.Query query;// Poi查询条件类
+    private PoiSearch poiSearch;// POI搜索
+    public void handlePoi(Poi poi) {
+        poiSearch.searchPOIIdAsyn(poi.getPoiId());
     }
 }
