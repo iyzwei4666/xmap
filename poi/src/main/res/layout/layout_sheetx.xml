@@ -5,13 +5,13 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/layout_bottomsheet_opened"
+        android:id="@+id/layout_sheet_view"
         layout="@layout/layout_sheet_view" />
 
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/layout_bottomsheet_opened" />
+        android:layout_below="@+id/layout_sheet_view" />
 
 </RelativeLayout>

@@ -11,6 +11,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -38,6 +41,7 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.common.entity.PublicEvent;
 import com.github.xmap.poi.mvp.model.entity.Event;
+import com.github.xmap.poi.mvp.ui.behavior.AnchorBottomSheetBehavior;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -51,6 +55,7 @@ import com.github.xmap.poi.R;
 
 import org.simple.eventbus.EventBus;
 
+import butterknife.BindView;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -72,7 +77,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     private MapView mapView;
     private AMap aMap;
     private LinearLayout.LayoutParams mParams;
-    private RelativeLayout mContainerLayout;
+    private CoordinatorLayout mContainerLayout;
 
     private WifiManager mWifiManager;
     private LocationSource.OnLocationChangedListener mListener;
@@ -102,9 +107,14 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         return R.layout.activity_poi; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
+    NestedScrollView bottomSheet;
+    private AnchorBottomSheetBehavior mBehavior;
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        mContainerLayout = (RelativeLayout) findViewById(R.id.root);
+        bottomSheet = findViewById(R.id.bottom_sheet);
+
+
+        mContainerLayout =  findViewById(R.id.root);
         AMapOptions aOptions = new AMapOptions();
         aOptions.camera(new CameraPosition(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f, 0, 0));
         mapView = new MapView(this, aOptions);
@@ -135,6 +145,44 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
         mPresenter.init(this);
 
+        mBehavior = AnchorBottomSheetBehavior.from(bottomSheet);
+        mBehavior.addBottomSheetCallback(new AnchorBottomSheetBehavior.BottomSheetCallback() {
+            private int oldState = 0;
+
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                switch (newState) {
+                    case AnchorBottomSheetBehavior.STATE_COLLAPSED:
+
+                        break;
+                    case AnchorBottomSheetBehavior.STATE_DRAGGING:
+
+                        break;
+                    case AnchorBottomSheetBehavior.STATE_EXPANDED:
+
+                        break;
+                    case AnchorBottomSheetBehavior.STATE_ANCHOR_POINT:
+
+                        break;
+                    case AnchorBottomSheetBehavior.STATE_HIDDEN:
+
+                        break;
+                    default:
+
+
+                        break;
+                }
+
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+        mBehavior.setState(AnchorBottomSheetBehavior.STATE_COLLAPSED);
     }
 
     @Override
