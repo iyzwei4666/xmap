@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="Anchor_BottomSheet_Behavior">com.powergis.modules.devinfoui.behavior.AnchorBottomSheetBehavior</string>
 </resources>

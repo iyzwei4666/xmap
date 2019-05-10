@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#0d6dc9</color>
+    <color name="colorRed">#F44336</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorWithe">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="dlg_window_bg">#4D000000</color>
+    <color name="colorGray">#808080</color>
+    <color name="colorLayer">#FFFFFF</color>
+    <color name="color_F2F2F2">#F2F2F2</color>
+    <color name="color_333333">#333333</color>
+    <color name="color_E1E1E1">#E1E1E1</color>
+    <color name="color_C1C1C1">#C1C1C1</color>
+    <color name="color_292929">#292929</color>
+    <color name="color_4287FF">#0d6dc9</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_0099e5">#0099e5</color>
+    <color name="color_6d6d6d">#6d6d6d</color>
+    <color name="color_f0f6fc">#f0f6fc</color>
+    <color name="color_5e9dda">#5e9dda</color>
+    <color name="color_white_blue">#E6E6FA</color>
+    <color name="color_C6C6C6">#C6C6C6</color>
+    <color name="color_949494">#949494</color>
+    <color name="color_3562fe">#3562fe</color>
+    <color name="color_0d6dc9">#0d6dc9</color>
+    <color name="color_F3F3F5">#F3F3F5</color>
+    <color name="color_1A68C4">#FF1A68C4</color>
+    <color name="color_f4f4f4">#f4f4f4</color>
+    <color name="primary">#1E8CAB</color>
+    <color name="light_dark">#F8F8F8</color>
+    <color name="title_bar">#00aeff</color>
+    <color name="colorLightBlue">#33a3dc</color>
+    <color name="colorStrongDark">#80000000</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorWeakDark">#1A000000</color>
+    <color name="colorMediumDark">#80000000</color>
+    <color name="colorMediumWhite">#D9ffffff</color>
+    <color name="colorSearchGray">#F5F5F5</color>
+    <color name="colorGisBlue">#1563b5</color>
+    <color name="color_a0d2f6">#a0d2f6</color>
+    <color name="colorLightDark">#E1E1E1</color>
+    <color name="colorLightDarkTra">#E6E1E1E1</color>
+    <color name="colorTransparency">#00000000</color>
+
+    <!-- item背景所需要的颜色值 -->
+    <color name="bg_selected">#ffff0000</color><!-- 红色 -->
+    <color name="bg_pressed">#ffFFB6C1</color><!-- 粉色 -->
+    <color name="bg_normal">#ff00ff00</color><!-- 绿色 -->
+    <!-- item中textview所需要的颜色值 -->
+
+    <color name="text_normal">#ff000000</color><!-- 黑色 -->
+    <color name="text_pressed">#80000000</color>
+
+    <color name="bg_normal_gray">#f6f6f6</color>
+    <color name="grey_b2b2b2">#B2B2B2</color>
+    <color name="blue_78d2f6">#78D2F6</color>
+    <color name="blue_01aaee">#01AAEE</color>
+    <color name="blue_00aaee">#00AAEE</color>
+    <color name="red_f3323b">#F3323B</color>
+    <color name="blue_37a0ec">#418ce2</color>
+    <color name="blue_36a0ec">#408ce2</color>
+
+    <color name="grey_f6f6f6">#f6f6f6</color>
+    <color name="grey_a5a5a5">#A5A5A5</color>
+    <color name="grey_dde1e7">#DDE1E7</color>
+    <color name="red_f4333c">#F4333C</color>
+
+    <color name="shadow">#1A000000</color>
+
+    <color name="default_shadow_color">#88757575</color>
+    <color name="default_fill_color">#ffffff</color>
+    <color name="click_gray_color">#f0f0f0</color>
+
+
+    <color name="color_main">#0099e6</color>
+
 </resources>
+
