@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
     TextView bottomSheetMenuProductionLedger;
     @BindView(R.id.top_bar)
     RelativeLayout topBar;
-    @BindView(R.id.layout_bottomsheet_shrank)
-    LinearLayout layoutBottomsheetShrank;
+
     @BindView(R.id.layout_bottomsheet_opened)
     LinearLayout layoutBottomsheetOpened;
     @BindView(R.id.layout_bottomsheet_picture)
@@ -78,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
         mBehavior = AnchorBottomSheetBehavior.from(bottomSheet);
         int height = ScreenUtil.getScreenHeight(MainActivity.this) / 3;
+        layoutBottomsheetPicture.getHeight();
         mBehavior.setAnchorPoint(height);
         mBehavior.addBottomSheetCallback(new AnchorBottomSheetBehavior.BottomSheetCallback() {
             private int oldState = 0;
@@ -115,16 +115,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-
-                if (newState != AnchorBottomSheetBehavior.STATE_COLLAPSED && layoutBottomsheetShrank.getVisibility() == View.VISIBLE) {
-                    // 没有折叠且bottom_sheet_tv可见的状态下-------即滑动状态
-                    layoutBottomsheetShrank.setVisibility(View.GONE);
-                    layoutBottomsheetOpened.setVisibility(View.VISIBLE);
-                } else if (newState == AnchorBottomSheetBehavior.STATE_COLLAPSED && layoutBottomsheetShrank.getVisibility() == View.GONE) {
-                    // 折叠状态下
-                    layoutBottomsheetShrank.setVisibility(View.VISIBLE);
-                    layoutBottomsheetOpened.setVisibility(View.GONE);
-                }
             }
 
             @Override

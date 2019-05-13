@@ -7,16 +7,14 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -40,22 +38,18 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.common.entity.PublicEvent;
+import com.github.xmap.poi.R;
+import com.github.xmap.poi.di.component.DaggerPoiComponent;
+import com.github.xmap.poi.mvp.contract.PoiContract;
 import com.github.xmap.poi.mvp.model.entity.Event;
-import com.github.xmap.poi.mvp.ui.behavior.AnchorBottomSheetBehavior;
+import com.github.xmap.poi.mvp.presenter.PoiPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
-import com.github.xmap.poi.di.component.DaggerPoiComponent;
-import com.github.xmap.poi.mvp.contract.PoiContract;
-import com.github.xmap.poi.mvp.presenter.PoiPresenter;
-
-import com.github.xmap.poi.R;
-
 
 import org.simple.eventbus.EventBus;
 
-import butterknife.BindView;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -85,6 +79,17 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     private AMapLocationClientOption mLocationOption;
 
 
+    int[] mDrawables = {
+            R.drawable.cheese_3,
+            R.drawable.cheese_3,
+            R.drawable.cheese_3,
+            R.drawable.cheese_3,
+            R.drawable.cheese_3,
+            R.drawable.cheese_3
+    };
+
+    TextView bottomSheetTextView;
+
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerPoiComponent //如找不到该类,请编译一下项目
@@ -107,12 +112,8 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         return R.layout.activity_poi; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
-    NestedScrollView bottomSheet;
-    private AnchorBottomSheetBehavior mBehavior;
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        bottomSheet = findViewById(R.id.bottom_sheet);
-
 
         mContainerLayout =  findViewById(R.id.root);
         AMapOptions aOptions = new AMapOptions();
@@ -145,45 +146,69 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
         mPresenter.init(this);
 
-        mBehavior = AnchorBottomSheetBehavior.from(bottomSheet);
-        mBehavior.addBottomSheetCallback(new AnchorBottomSheetBehavior.BottomSheetCallback() {
-            private int oldState = 0;
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
+ /*       ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(" ");
+        }
+
+        *//**
+         * If we want to listen for states callback
+         *//*
+        androidx.coordinatorlayout.widget.CoordinatorLayout coordinatorLayout = (androidx.coordinatorlayout.widget.CoordinatorLayout) findViewById(R.id.root);
+        View bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
+        final BottomSheetBehaviorGoogleMapsLike behavior = BottomSheetBehaviorGoogleMapsLike.from(bottomSheet);
+        behavior.addBottomSheetCallback(new BottomSheetBehaviorGoogleMapsLike.BottomSheetCallback() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
+            public void onStateChanged(@androidx.annotation.NonNull View bottomSheet, int newState) {
                 switch (newState) {
-                    case AnchorBottomSheetBehavior.STATE_COLLAPSED:
-
+                    case BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED:
+                        Log.d("bottomsheet-", "STATE_COLLAPSED");
                         break;
-                    case AnchorBottomSheetBehavior.STATE_DRAGGING:
-
+                    case BottomSheetBehaviorGoogleMapsLike.STATE_DRAGGING:
+                        Log.d("bottomsheet-", "STATE_DRAGGING");
                         break;
-                    case AnchorBottomSheetBehavior.STATE_EXPANDED:
-
+                    case BottomSheetBehaviorGoogleMapsLike.STATE_EXPANDED:
+                        Log.d("bottomsheet-", "STATE_EXPANDED");
                         break;
-                    case AnchorBottomSheetBehavior.STATE_ANCHOR_POINT:
-
+                    case BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT:
+                        Log.d("bottomsheet-", "STATE_ANCHOR_POINT");
                         break;
-                    case AnchorBottomSheetBehavior.STATE_HIDDEN:
-
+                    case BottomSheetBehaviorGoogleMapsLike.STATE_HIDDEN:
+                        Log.d("bottomsheet-", "STATE_HIDDEN");
                         break;
                     default:
-
-
+                        Log.d("bottomsheet-", "STATE_SETTLING");
                         break;
                 }
-
-
             }
 
             @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
+            public void onSlide(@androidx.annotation.NonNull View bottomSheet, float slideOffset) {
             }
         });
-        mBehavior.setState(AnchorBottomSheetBehavior.STATE_COLLAPSED);
-    }
+
+        MergedAppBarLayout mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
+        MergedAppBarLayoutBehavior mergedAppBarLayoutBehavior = MergedAppBarLayoutBehavior.from(mergedAppBarLayout);
+        mergedAppBarLayoutBehavior.setToolbarTitle("Title Dummy");
+        mergedAppBarLayoutBehavior.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT);
+            }
+        });
+
+        bottomSheetTextView = (TextView) bottomSheet.findViewById(R.id.bottom_sheet_title);
+        ItemPagerAdapter adapter = new ItemPagerAdapter(this,mDrawables);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(adapter);
+
+        behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT);
+*/
+     }
 
     @Override
     public void showLoading() {
