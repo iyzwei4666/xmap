@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -46,6 +48,9 @@ import com.github.xmap.poi.mvp.presenter.PoiPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+import com.mahc.custombottomsheetbehavior.BottomSheetBehaviorGoogleMapsLike;
+import com.mahc.custombottomsheetbehavior.MergedAppBarLayout;
+import com.mahc.custombottomsheetbehavior.MergedAppBarLayoutBehavior;
 
 
 import org.simple.eventbus.EventBus;
@@ -118,18 +123,17 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         mContainerLayout =  findViewById(R.id.root);
         AMapOptions aOptions = new AMapOptions();
         aOptions.camera(new CameraPosition(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f, 0, 0));
-        mapView = new MapView(this, aOptions);
+        mapView = findViewById(R.id.amap);
         mapView.onCreate(savedInstanceState);
         mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        mContainerLayout.addView(mapView, mParams);
         aMap = mapView.getMap();
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(false);
         uiSettings.setScaleControlsEnabled(true);
 
 
-//        aMap.setMyLocationEnabled(true);
+        aMap.setMyLocationEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);//禁止地图旋转手势.
         uiSettings.setTiltGesturesEnabled(false);//禁止倾斜手势.
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
@@ -146,24 +150,23 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
         mPresenter.init(this);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
- /*       ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(" ");
         }
 
-        *//**
-         * If we want to listen for states callback
-         *//*
-        androidx.coordinatorlayout.widget.CoordinatorLayout coordinatorLayout = (androidx.coordinatorlayout.widget.CoordinatorLayout) findViewById(R.id.root);
+
+
+        CoordinatorLayout coordinatorLayout = findViewById(R.id.root);
         View bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
         final BottomSheetBehaviorGoogleMapsLike behavior = BottomSheetBehaviorGoogleMapsLike.from(bottomSheet);
         behavior.addBottomSheetCallback(new BottomSheetBehaviorGoogleMapsLike.BottomSheetCallback() {
             @Override
-            public void onStateChanged(@androidx.annotation.NonNull View bottomSheet, int newState) {
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED:
                         Log.d("bottomsheet-", "STATE_COLLAPSED");
@@ -187,7 +190,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
             }
 
             @Override
-            public void onSlide(@androidx.annotation.NonNull View bottomSheet, float slideOffset) {
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             }
         });
 
@@ -206,8 +209,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(adapter);
 
-        behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT);
-*/
+        behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
      }
 
     @Override
