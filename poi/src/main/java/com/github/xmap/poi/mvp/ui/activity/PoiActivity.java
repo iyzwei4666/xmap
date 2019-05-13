@@ -39,6 +39,7 @@ import com.amap.api.maps.model.Poi;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.Photo;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.common.entity.PublicEvent;
@@ -122,7 +123,12 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_poi; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
@@ -161,7 +167,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
 
 
-        ViewPager viewPager = findViewById(R.id.pager);
+        viewPager = findViewById(R.id.pager);
         NestedScrollView bottomSheet = findViewById(R.id.bottom_sheet);
         FloatingActionButton fabBtn = findViewById(R.id.fab);
         MergedAppBarLayout mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
@@ -226,12 +232,12 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         });
 
         bottomSheetTextView = (TextView) bottomSheet.findViewById(R.id.bottom_sheet_title);
-        ItemPagerAdapter adapter = new ItemPagerAdapter(this, mDrawables);
 
-        viewPager.setAdapter(adapter);
 
         behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
     }
+    ViewPager viewPager;
+    ItemPagerAdapter adapter;
     BottomSheetBehaviorGoogleMapsLike behavior;
     List<View> mapui = new ArrayList<>();
     @Override
@@ -426,6 +432,12 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     @Override
     public void onPoiItemSearched(PoiItem poiItem, int i) {
         mPresenter.handlePoiItem(poiItem);
+
+
+        adapter = new ItemPagerAdapter(this);
+        viewPager.setAdapter(adapter);
+        adapter.setImgUrls(poiItem.getPhotos());
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -433,10 +445,5 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         EventBus.getDefault().post(new PublicEvent.onBackPressed());
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
+
 }
