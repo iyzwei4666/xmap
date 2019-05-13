@@ -65,18 +65,7 @@
             android:fitsSystemWindows="true" />
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_action_go"
-        android:visibility="gone"
-        app:layout_anchor="@id/bottom_sheet"
-        app:layout_anchorGravity="top|right|end"
-        app:layout_behavior="@string/ScrollAwareFABBehavior" />
+
 
     <com.mahc.custombottomsheetbehavior.MergedAppBarLayout
         android:id="@+id/mergedappbarlayout"

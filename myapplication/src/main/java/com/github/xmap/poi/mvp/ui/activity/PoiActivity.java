@@ -10,14 +10,17 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -58,6 +61,7 @@ import org.simple.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
@@ -81,6 +85,23 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
 
 
+    @BindView(R.id.bottom_sheet_title)
+    TextView bottomSheetTitle;
+    @BindView(R.id.text_dummy1)
+    TextView textDummy1;
+    @BindView(R.id.button1)
+    ImageButton button1;
+    @BindView(R.id.button2)
+    ImageButton button2;
+    @BindView(R.id.establecimiento_layout_favoritos_button)
+    LinearLayout establecimientoLayoutFavoritosButton;
+    @BindView(R.id.establecimiento_share_button)
+    ImageButton establecimientoShareButton;
+    @BindView(R.id.establecimiento_icon_sucursales)
+    ImageView establecimientoIconSucursales;
+    @BindView(R.id.establecimiento_sucursal_row_button)
+    Button establecimientoSucursalRowButton;
+
     private MapView mapView;
     private AMap aMap;
     private LinearLayout.LayoutParams mParams;
@@ -101,7 +122,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
             R.drawable.cheese_3
     };
 
-    TextView bottomSheetTextView;
+
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -121,12 +142,14 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_poi; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
@@ -164,10 +187,9 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         mPresenter.init(this);
 
 
-
         viewPager = findViewById(R.id.pager);
         NestedScrollView bottomSheet = findViewById(R.id.bottom_sheet);
-        FloatingActionButton fabBtn = findViewById(R.id.fab);
+
         MergedAppBarLayout mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
 
 
@@ -228,15 +250,14 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
             }
         });
 
-        bottomSheetTextView = (TextView) bottomSheet.findViewById(R.id.bottom_sheet_title);
-
-
         behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
     }
+
     ViewPager viewPager;
     ItemPagerAdapter adapter;
     BottomSheetBehaviorGoogleMapsLike behavior;
     List<View> poiUI = new ArrayList<>();
+
     @Override
     public void showLoading() {
 
@@ -401,7 +422,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
     @Override
     public void showPoiUI() {
-        for (View v : poiUI){
+        for (View v : poiUI) {
             v.setVisibility(View.VISIBLE);
         }
 
@@ -409,7 +430,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
     @Override
     public void hidePoiUI() {
-        for (View v : poiUI){
+        for (View v : poiUI) {
             v.setVisibility(View.GONE);
         }
         behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
@@ -435,6 +456,9 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         viewPager.setAdapter(adapter);
         adapter.setImgUrls(poiItem.getPhotos());
         adapter.notifyDataSetChanged();
+
+        bottomSheetTitle.setText(poiItem.getTitle());
+        textDummy1.setText(poiItem.getAdName());
     }
 
     @Override
