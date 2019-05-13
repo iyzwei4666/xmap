@@ -7,10 +7,14 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,13 +27,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -52,9 +54,12 @@ import com.mahc.custombottomsheetbehavior.BottomSheetBehaviorGoogleMapsLike;
 import com.mahc.custombottomsheetbehavior.MergedAppBarLayout;
 import com.mahc.custombottomsheetbehavior.MergedAppBarLayoutBehavior;
 
-
 import org.simple.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -72,14 +77,18 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * <a href="https://github.com/JessYanCoding/MVPArmsTemplate">模版请保持更新</a>
  * ================================================
  */
-public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContract.View ,LocationSource, AMapLocationListener,AMap.OnPOIClickListener,PoiSearch.OnPoiSearchListener {
+public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContract.View, LocationSource, AMapLocationListener, AMap.OnPOIClickListener, PoiSearch.OnPoiSearchListener {
+
+
+
+
     private MapView mapView;
     private AMap aMap;
     private LinearLayout.LayoutParams mParams;
     private CoordinatorLayout mContainerLayout;
 
     private WifiManager mWifiManager;
-    private LocationSource.OnLocationChangedListener mListener;
+    private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
 
@@ -104,6 +113,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
                 .build()
                 .inject(this);
     }
+
     /**
      * 方法必须重写
      */
@@ -112,6 +122,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
+
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_poi; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
@@ -120,9 +131,8 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
 
-        mContainerLayout =  findViewById(R.id.root);
-        AMapOptions aOptions = new AMapOptions();
-        aOptions.camera(new CameraPosition(new LatLng(26.167029352515243 ,107.58567626007701) , 14.5f, 0, 0));
+        mContainerLayout = findViewById(R.id.root);
+
         mapView = findViewById(R.id.amap);
         mapView.onCreate(savedInstanceState);
         mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -131,13 +141,12 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(false);
         uiSettings.setScaleControlsEnabled(true);
-
-
-        aMap.setMyLocationEnabled(true);
+//        aMap.setMyLocationEnabled(true);
+        aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243, 107.58567626007701), 14.5f));
         uiSettings.setRotateGesturesEnabled(false);//禁止地图旋转手势.
         uiSettings.setTiltGesturesEnabled(false);//禁止倾斜手势.
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-        mWifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         aMap.setOnPOIClickListener(this);
         aMap.setOnMapClickListener(new AMap.OnMapClickListener() {
@@ -150,6 +159,19 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
         mPresenter.init(this);
 
+
+
+        ViewPager viewPager = findViewById(R.id.pager);
+        NestedScrollView bottomSheet = findViewById(R.id.bottom_sheet);
+        FloatingActionButton fabBtn = findViewById(R.id.fab);
+        MergedAppBarLayout mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
+
+
+        mapui.add(viewPager);
+        mapui.add(bottomSheet);
+        mapui.add(fabBtn);
+        mapui.add(mergedAppBarLayout);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -160,10 +182,9 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         }
 
 
-
         CoordinatorLayout coordinatorLayout = findViewById(R.id.root);
-        View bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
-        final BottomSheetBehaviorGoogleMapsLike behavior = BottomSheetBehaviorGoogleMapsLike.from(bottomSheet);
+        bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
+        behavior = BottomSheetBehaviorGoogleMapsLike.from(bottomSheet);
         behavior.addBottomSheetCallback(new BottomSheetBehaviorGoogleMapsLike.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -194,7 +215,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
             }
         });
 
-        MergedAppBarLayout mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
+        mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
         MergedAppBarLayoutBehavior mergedAppBarLayoutBehavior = MergedAppBarLayoutBehavior.from(mergedAppBarLayout);
         mergedAppBarLayoutBehavior.setToolbarTitle("Title Dummy");
         mergedAppBarLayoutBehavior.setNavigationOnClickListener(new View.OnClickListener() {
@@ -205,13 +226,14 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         });
 
         bottomSheetTextView = (TextView) bottomSheet.findViewById(R.id.bottom_sheet_title);
-        ItemPagerAdapter adapter = new ItemPagerAdapter(this,mDrawables);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        ItemPagerAdapter adapter = new ItemPagerAdapter(this, mDrawables);
+
         viewPager.setAdapter(adapter);
 
         behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
-     }
-
+    }
+    BottomSheetBehaviorGoogleMapsLike behavior;
+    List<View> mapui = new ArrayList<>();
     @Override
     public void showLoading() {
 
@@ -252,7 +274,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss(); //关闭dialog
-                Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+                Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                 startActivity(intent); // 打开系统设置界面
             }
         });
@@ -309,7 +331,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     }
 
     @Override
-    public void activate(LocationSource.OnLocationChangedListener onLocationChangedListener) {
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
         checkWifiSetting();
         mListener = onLocationChangedListener;
         if (mlocationClient == null) {
@@ -344,21 +366,22 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     @Override
     public void onPOIClick(Poi poi) {
         mPresenter.handlePoi(poi);
-        aMap.animateCamera(CameraUpdateFactory.newLatLng(poi.getCoordinate() ));
+        aMap.animateCamera(CameraUpdateFactory.newLatLng(poi.getCoordinate()));
 
     }
 
     private Marker marker;
+
     /**
      * 添加带生长效果marker
      */
     @Override
     public void addPoiMarker(LatLng latLng) {
-        if (marker!=null)
+        if (marker != null)
             marker.remove();
         MarkerOptions options = new MarkerOptions();
         options.position(latLng);
-        options.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(this.getResources(),R.mipmap.icon_openmap_mark)));
+        options.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(this.getResources(), R.mipmap.icon_openmap_mark)));
         marker = aMap.addMarker(options);
         Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
         markerAnimation.setDuration(1000);  //设置动画时间 单位毫秒
@@ -368,9 +391,26 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
     @Override
     public void delPoiMarker() {
-        if (marker!=null)
+        if (marker != null)
             marker.remove();
-            marker = null;
+        marker = null;
+    }
+
+    @Override
+    public void showPoiUI() {
+        for (View v : mapui){
+            v.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    public void hidePoiUI() {
+        for (View v : mapui){
+            v.setVisibility(View.GONE);
+        }
+        behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
+
     }
 
     @Override
@@ -391,5 +431,12 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     @Override
     public void onBackPressed() {
         EventBus.getDefault().post(new PublicEvent.onBackPressed());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

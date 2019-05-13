@@ -87,6 +87,7 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     public void handlePoiItem(PoiItem poiItem) {
         Timber.i("searchPOIIdAsynSucc");
         mRootView.showPoiInfo(poiItem);
+        mRootView.showPoiUI();
     }
 
     public void init(PoiSearch.OnPoiSearchListener listener) {
@@ -98,10 +99,12 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     @Subscriber
     public void onMapClickEvent(Event.MapClick event) {
         mRootView.delPoiMarker();
+        mRootView.hidePoiUI();
     }
 
     @Subscriber
     public void onBackPressed(PublicEvent.onBackPressed event) {
-        mRootView.delPoiMarker();;
+        mRootView.delPoiMarker();
+        mRootView.hidePoiUI();
     }
 }
