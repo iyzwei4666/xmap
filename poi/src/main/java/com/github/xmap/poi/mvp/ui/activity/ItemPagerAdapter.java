@@ -39,7 +39,7 @@ public class ItemPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
+        View itemView = mLayoutInflater.inflate(R.layout.bottom_sheet_photo_item, container, false);
         ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
         Glide.with(mContext).load(imgUrls.get(position).getUrl()).into(imageView);
         container.addView(itemView);

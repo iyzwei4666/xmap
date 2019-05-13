@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -39,7 +38,6 @@ import com.amap.api.maps.model.Poi;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.services.core.PoiItem;
-import com.amap.api.services.poisearch.Photo;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.common.entity.PublicEvent;
@@ -147,7 +145,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(false);
         uiSettings.setScaleControlsEnabled(true);
-//        aMap.setMyLocationEnabled(true);
+        aMap.setMyLocationEnabled(true);
         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.167029352515243, 107.58567626007701), 14.5f));
         uiSettings.setRotateGesturesEnabled(false);//禁止地图旋转手势.
         uiSettings.setTiltGesturesEnabled(false);//禁止倾斜手势.
@@ -173,10 +171,9 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         MergedAppBarLayout mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
 
 
-        mapui.add(viewPager);
-        mapui.add(bottomSheet);
-        mapui.add(fabBtn);
-        mapui.add(mergedAppBarLayout);
+        poiUI.add(viewPager);
+        poiUI.add(bottomSheet);
+        poiUI.add(mergedAppBarLayout);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -239,7 +236,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     ViewPager viewPager;
     ItemPagerAdapter adapter;
     BottomSheetBehaviorGoogleMapsLike behavior;
-    List<View> mapui = new ArrayList<>();
+    List<View> poiUI = new ArrayList<>();
     @Override
     public void showLoading() {
 
@@ -404,7 +401,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
     @Override
     public void showPoiUI() {
-        for (View v : mapui){
+        for (View v : poiUI){
             v.setVisibility(View.VISIBLE);
         }
 
@@ -412,7 +409,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
     @Override
     public void hidePoiUI() {
-        for (View v : mapui){
+        for (View v : poiUI){
             v.setVisibility(View.GONE);
         }
         behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);

@@ -166,7 +166,7 @@ public class ScrollingAppBarLayoutBehavior extends AppBarLayout.ScrollingViewBeh
         if (resourceId > 0) {
             result = mContext.getResources().getDimensionPixelSize(resourceId);
         }
-        return result;
+        return result + 60;
     }
 
     private void setStatusBarBackgroundVisible(boolean visible){
