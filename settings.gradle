@@ -1,5 +1,5 @@
-include ':sdk', ':poi'
+include ':sdk'
 include ':myapplication'
-include ':bottomsheet'
+//include ':bottomsheet'
 include ':googlemaps-like'
 //include ':bottomsht'
