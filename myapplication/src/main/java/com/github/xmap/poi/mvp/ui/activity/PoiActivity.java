@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -37,6 +36,7 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Poi;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
@@ -188,7 +188,7 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
 
         viewPager = findViewById(R.id.pager);
-        NestedScrollView bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheet = findViewById(R.id.bottom_sheet);
 
         MergedAppBarLayout mergedAppBarLayout = findViewById(R.id.mergedappbarlayout);
 
@@ -251,9 +251,22 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
         });
 
         behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
+
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW);//只定位一次。
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;//定位一次，且将视角移动到地图中心点。
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW) ;//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE);//连续定位、且将视角移动到地图中心点，地图依照设备方向旋转，定位点会跟随设备移动。（1秒1次定位）
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
+        //以下三种模式从5.1.0版本开始提供
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，定位点依照设备方向旋转，并且蓝点会跟随设备移动。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，并且蓝点会跟随设备移动。
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
+        aMap.setMyLocationStyle(myLocationStyle);
     }
 
     ViewPager viewPager;
+    NestedScrollView bottomSheet;
     ItemPagerAdapter adapter;
     BottomSheetBehaviorGoogleMapsLike behavior;
     List<View> poiUI = new ArrayList<>();
@@ -438,6 +451,17 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
     }
 
     @Override
+    public void backSheetStateCollapsed() {
+        behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
+    }
+
+    @Override
+    public void backSheetStateAnchorPoint() {
+        behavior.setState(BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT);
+        bottomSheet.fullScroll(NestedScrollView.FOCUS_UP);
+    }
+
+    @Override
     public void showPoiInfo(PoiItem poiItem) {
 
     }
@@ -463,7 +487,8 @@ public class PoiActivity extends BaseActivity<PoiPresenter> implements PoiContra
 
     @Override
     public void onBackPressed() {
-        EventBus.getDefault().post(new PublicEvent.onBackPressed());
+
+        EventBus.getDefault().post(new PublicEvent.BackPressed(behavior.getState()));
     }
 
 

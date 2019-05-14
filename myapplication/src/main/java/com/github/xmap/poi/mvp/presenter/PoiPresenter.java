@@ -21,6 +21,10 @@ import javax.inject.Inject;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 import timber.log.Timber;
 
+import static com.mahc.custombottomsheetbehavior.BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT;
+import static com.mahc.custombottomsheetbehavior.BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED;
+import static com.mahc.custombottomsheetbehavior.BottomSheetBehaviorGoogleMapsLike.STATE_EXPANDED;
+
 
 /**
  * ================================================
@@ -100,8 +104,15 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     }
 
     @Subscriber
-    public void onBackPressed(PublicEvent.onBackPressed event) {
-        mRootView.delPoiMarker();
-        mRootView.hidePoiUI();
+    public void onBackPressed(PublicEvent.BackPressed event) {
+        if (event.state == STATE_COLLAPSED){
+            mRootView.delPoiMarker();
+            mRootView.hidePoiUI();
+        }else if (event.state == STATE_ANCHOR_POINT){
+            mRootView.backSheetStateCollapsed();
+        }else if (event.state == STATE_EXPANDED){
+            mRootView.backSheetStateAnchorPoint();
+        }
+
     }
 }
