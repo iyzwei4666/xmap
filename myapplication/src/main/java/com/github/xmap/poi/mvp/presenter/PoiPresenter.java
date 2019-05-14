@@ -75,7 +75,7 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
     private PoiSearch poiSearch;// POI搜索
     public void handlePoi(Poi poi) {
         Timber.i("onPOIClick");
-        Timber.i("searchPOIIdAsyn");
+        Timber.i("searchPOIIdAsyn开始");
         poiSearch.searchPOIIdAsyn(poi.getPoiId());
         Timber.i("addPoiMarker");
         mRootView.addPoiMarker(poi.getCoordinate());
@@ -86,7 +86,7 @@ public class PoiPresenter extends BasePresenter<PoiContract.Model, PoiContract.V
 
 
     public void handlePoiItem(PoiItem poiItem) {
-        Timber.i("searchPOIIdAsynSucc");
+        Timber.i("searchPOIIdAsyn成功");
         mRootView.showPoiInfo(poiItem);
         mRootView.showPoiUI();
     }
