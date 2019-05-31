@@ -1,4 +1,4 @@
-package com.github.xmap.placesrch.amap;
+package com.github.xmap.placesrch.mvp.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,12 +15,15 @@ import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 
 import com.github.xmap.R;
-import com.github.xmap.placesrch.amap.adapter.InputTipsAdapter;
-import com.github.xmap.placesrch.amap.util.Constants;
-import com.github.xmap.placesrch.amap.util.ToastUtil;
+import com.github.xmap.placesrch.mvp.ui.adapter.InputTipsAdapter;
+import com.github.xmap.placesrch.mvp.ui.util.Constants;
+import com.github.xmap.placesrch.mvp.ui.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.xmap.placesrch.mvp.ui.activity.PlaceSrchActivity.RESULT_CODE_INPUTTIPS;
+import static com.github.xmap.placesrch.mvp.ui.activity.PlaceSrchActivity.RESULT_CODE_KEYWORDS;
 
 public class InputTipsActivity extends Activity implements SearchView.OnQueryTextListener, Inputtips.InputtipsListener, OnItemClickListener, View.OnClickListener {
     private SearchView mSearchView;// 输入搜索关键字
@@ -81,7 +84,7 @@ public class InputTipsActivity extends Activity implements SearchView.OnQueryTex
             Tip tip = (Tip) adapterView.getItemAtPosition(i);
             Intent intent = new Intent();
             intent.putExtra(Constants.EXTRA_TIP, tip);
-            setResult(MainActivity.RESULT_CODE_INPUTTIPS, intent);
+            setResult(RESULT_CODE_INPUTTIPS, intent);
             this.finish();
         }
     }
@@ -96,7 +99,7 @@ public class InputTipsActivity extends Activity implements SearchView.OnQueryTex
     public boolean onQueryTextSubmit(String query) {
         Intent intent = new Intent();
         intent.putExtra(Constants.KEY_WORDS_NAME, query);
-        setResult(MainActivity.RESULT_CODE_KEYWORDS, intent);
+        setResult(RESULT_CODE_KEYWORDS, intent);
         this.finish();
         return false;
     }

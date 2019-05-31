@@ -1,4 +1,4 @@
-package com.github.xmap.placesrch.amap.overlay;
+package com.github.xmap.placesrch.mvp.ui.overlay;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;

@@ -1,4 +1,4 @@
-package com.github.xmap.placesrch.amap.adapter;
+package com.github.xmap.placesrch.mvp.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

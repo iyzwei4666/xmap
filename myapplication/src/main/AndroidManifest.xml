@@ -65,17 +65,19 @@
             android:value="ConfigModule" />
 
         <activity android:name=".MainActivity" />
+        <activity android:name="com.github.xmap.placesrch.mvp.ui.activity.InputTipsActivity" />
         <activity android:name=".poi.mvp.ui.activity.PoiActivity">
 
         </activity>
-        <activity android:name=".placesrch.mvp.ui.activity.PlaceSrchActivity"></activity>
-        <activity android:name=".placesrch.amap.MainActivity">
+        <activity android:name=".placesrch.mvp.ui.activity.PlaceSrchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
     </application>
 
 </manifest>

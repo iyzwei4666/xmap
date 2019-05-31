@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.github.xmap.placesrch.amap.util;
+package com.github.xmap.placesrch.mvp.ui.util;
 
 import android.content.Context;
 import android.widget.Toast;
