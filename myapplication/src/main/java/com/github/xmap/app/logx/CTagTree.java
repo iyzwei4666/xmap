@@ -1,4 +1,4 @@
-package com.github.xmap.app.service;
+package com.github.xmap.app.logx;
 
 /**
  * Created by Whyn on 2017/8/28.

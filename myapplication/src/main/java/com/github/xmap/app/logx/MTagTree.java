@@ -1,4 +1,4 @@
-package com.github.xmap.app.service;
+package com.github.xmap.app.logx;
 
 import android.support.annotation.NonNull;
 
