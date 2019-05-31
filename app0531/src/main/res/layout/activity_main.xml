@@ -17,7 +17,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@color/colorWithe">
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/clean_keywords"

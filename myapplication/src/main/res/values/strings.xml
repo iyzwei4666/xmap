@@ -36,4 +36,6 @@ limitations under the License. Lorem ipsum dolor sit amet, consectetuer adipisci
     <string name="ScrollAwareFABBehavior">com.mahc.custombottomsheetbehavior.ScrollAwareFABBehavior</string>
     <string name="MergedAppBarLayoutBehavior">com.mahc.custombottomsheetbehavior.MergedAppBarLayoutBehavior</string>
     <string name="ScrollingAppBarLayoutBehavior">com.mahc.custombottomsheetbehavior.ScrollingAppBarLayoutBehavior</string>
+
+    <string name="no_result">对不起，没有搜索到相关数据！</string>
 </resources>

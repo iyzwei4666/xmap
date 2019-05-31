@@ -6,6 +6,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWithe">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
+
     <color name="colorBlack">#000000</color>
     <color name="dlg_window_bg">#4D000000</color>
     <color name="colorGray">#808080</color>
@@ -78,4 +79,8 @@
     <color name="color_main">#0099e6</color>
 
 
+    <color name="darkgrey"> #C0C0C0</color>
+    <color name="grey"> #ebebeb</color>
+
+    <color name="text_hint">#6C6C6C</color>
 </resources>

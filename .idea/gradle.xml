@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app0531" />
             <option value="$PROJECT_DIR$/googlemaps-like" />
             <option value="$PROJECT_DIR$/myapplication" />
             <option value="$PROJECT_DIR$/sdk" />
