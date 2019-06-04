@@ -57,7 +57,9 @@ public class InputTipsActivity extends Activity implements SearchView.OnQueryTex
         mSearchView.setSubmitButtonEnabled(false);
 
        List list = LitePal.findAll(PlaceEntity.class);
-       System.out.print(list.toArray());
+       if (list!=null && list.size()>0)
+       ToastUtil.show(this , list.toString());
+
     }
 
     /**
@@ -92,6 +94,7 @@ public class InputTipsActivity extends Activity implements SearchView.OnQueryTex
             Intent intent = new Intent();
             intent.putExtra(Constants.EXTRA_TIP, tip);
             setResult(RESULT_CODE_INPUTTIPS, intent);
+            new PlaceEntity( mSearchView.getQuery().toString() , new Date()).save();
             this.finish();
         }
     }

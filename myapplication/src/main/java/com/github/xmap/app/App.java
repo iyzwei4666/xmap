@@ -12,6 +12,8 @@ import com.github.xmap.app.logx.FileTree;
 import com.github.xmap.app.logx.MTagTree;
 import com.jess.arms.base.BaseApplication;
 
+import org.litepal.LitePal;
+
 import timber.log.Timber;
 
 /**
@@ -22,7 +24,7 @@ public class App extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        LitePal.initialize(this);
         setLog();
     }
 

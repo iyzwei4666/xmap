@@ -28,4 +28,13 @@ public class PlaceEntity extends LitePalSupport {
     public void setDate(Date date) {
         this.date = date;
     }
+
+
+    @Override
+    public String toString() {
+        return "PlaceEntity{" +
+                "key='" + key + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }
