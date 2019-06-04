@@ -65,6 +65,7 @@ dependencies {
     //tools
     annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
 
+    implementation 'org.litepal.android:java:3.0.0'
     //test
     debugImplementation rootProject.ext.dependencies["canary-debug"]
     releaseImplementation rootProject.ext.dependencies["canary-release"]

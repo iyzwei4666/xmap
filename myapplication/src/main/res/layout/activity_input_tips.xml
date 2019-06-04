@@ -7,7 +7,7 @@
     android:background="@color/grey"
     android:orientation="vertical"
     android:padding="5dp"
-    tools:context="com.amap.placesearch.InputTipsActivity">
+    tools:context="com.github.xmap.placesrch.mvp.ui.activity.InputTipsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +16,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/back"
             android:layout_width="56dp"
             android:layout_height="match_parent"

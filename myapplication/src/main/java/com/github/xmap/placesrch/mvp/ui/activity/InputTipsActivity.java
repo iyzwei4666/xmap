@@ -15,11 +15,15 @@ import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 
 import com.github.xmap.R;
+import com.github.xmap.placesrch.mvp.entity.PlaceEntity;
 import com.github.xmap.placesrch.mvp.ui.adapter.InputTipsAdapter;
 import com.github.xmap.placesrch.mvp.ui.util.Constants;
 import com.github.xmap.placesrch.mvp.ui.util.ToastUtil;
 
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.github.xmap.placesrch.mvp.ui.activity.PlaceSrchActivity.RESULT_CODE_INPUTTIPS;
@@ -51,6 +55,9 @@ public class InputTipsActivity extends Activity implements SearchView.OnQueryTex
         mSearchView.onActionViewExpanded();
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setSubmitButtonEnabled(false);
+
+       List list = LitePal.findAll(PlaceEntity.class);
+       System.out.print(list.toArray());
     }
 
     /**
@@ -100,6 +107,9 @@ public class InputTipsActivity extends Activity implements SearchView.OnQueryTex
         Intent intent = new Intent();
         intent.putExtra(Constants.KEY_WORDS_NAME, query);
         setResult(RESULT_CODE_KEYWORDS, intent);
+
+        new PlaceEntity( mSearchView.getQuery().toString() , new Date()).save();
+
         this.finish();
         return false;
     }
