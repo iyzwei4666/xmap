@@ -180,6 +180,8 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
             }
         });
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        aMap.setOnMarkerClickListener(this);// 添加点击marker监听事件
+        aMap.setInfoWindowAdapter(this);// 添加显示infowindow监听事件
 
         mPresenter.init(this);
 
@@ -492,8 +494,6 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
         EventBus.getDefault().post(new PublicEvent.BackPressed(behavior.getState()));
     }
 
-
-    private AMap mAMap;
     private String mKeyWords = "";// 要输入的poi搜索关键字
     private ProgressDialog progDialog = null;// 搜索时进度条
 
@@ -509,16 +509,6 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
     public static final int RESULT_CODE_INPUTTIPS = 101;
     public static final int RESULT_CODE_KEYWORDS = 102;
 
-
-
-    /**
-     * 设置页面监听
-     */
-    private void setUpMap() {
-        mAMap.setOnMarkerClickListener(this);// 添加点击marker监听事件
-        mAMap.setInfoWindowAdapter(this);// 添加显示infowindow监听事件
-        mAMap.getUiSettings().setRotateGesturesEnabled(false);
-    }
 
     /**
      * 显示进度框
@@ -614,8 +604,8 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
                             .getSearchSuggestionCitys();// 当搜索不到poiitem数据时，会返回含有搜索关键字的城市信息
 
                     if (poiItems != null && poiItems.size() > 0) {
-                        mAMap.clear();// 清理之前的图标
-                        PoiOverlay poiOverlay = new PoiOverlay(mAMap, poiItems);
+                        aMap.clear();// 清理之前的图标
+                        PoiOverlay poiOverlay = new PoiOverlay(aMap, poiItems);
                         poiOverlay.removeFromMap();
                         poiOverlay.addToMap();
                         poiOverlay.zoomToSpan();
@@ -651,7 +641,7 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CODE_INPUTTIPS && data
                 != null) {
-            mAMap.clear();
+            aMap.clear();
             Tip tip = data.getParcelableExtra(Constants.EXTRA_TIP);
             if (tip.getPoiID() == null || tip.getPoiID().equals("")) {
                 doSearchQuery(tip.getName());
@@ -663,7 +653,7 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
                 mCleanKeyWords.setVisibility(View.VISIBLE);
             }
         } else if (resultCode == RESULT_CODE_KEYWORDS && data != null) {
-            mAMap.clear();
+            aMap.clear();
             String keywords = data.getStringExtra(Constants.KEY_WORDS_NAME);
             if(keywords != null && !keywords.equals("")){
                 doSearchQuery(keywords);
@@ -684,12 +674,12 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
         if (tip == null) {
             return;
         }
-        mPoiMarker = mAMap.addMarker(new MarkerOptions());
+        mPoiMarker = aMap.addMarker(new MarkerOptions());
         LatLonPoint point = tip.getPoint();
         if (point != null) {
             LatLng markerPosition = new LatLng(point.getLatitude(), point.getLongitude());
             mPoiMarker.setPosition(markerPosition);
-            mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, 17));
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, 17));
         }
         mPoiMarker.setTitle(tip.getName());
         mPoiMarker.setSnippet(tip.getAddress());
@@ -707,7 +697,7 @@ public class BoxActivity extends BaseActivity<BoxPresenter> implements BoxContra
                 break;
             case R.id.clean_keywords:
                 mKeywordsTextView.setText("");
-                mAMap.clear();
+                aMap.clear();
                 mCleanKeyWords.setVisibility(View.GONE);
             default:
                 break;
